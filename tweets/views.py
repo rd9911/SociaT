@@ -1,3 +1,4 @@
+import random
 from django.http.response import Http404
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -5,22 +6,24 @@ from django.http import HttpResponse, JsonResponse
 from tweets.models import Tweet
 # Create your views here.
 
-
+def home_page(request, *args, **kwargs):
+    return render(request, 'pages/home.html', context={}, status=200)
+    
 
 def tweet_list_view(request, *args, **kwargs):
     qs = Tweet.objects.all()
-    tweets_list = [{"id": x.id, "content": x.content} for x in qs]
+    tweets_list = [{"id": x.id, "content": x.content, "likes": random.randint(0, 100)} for x in qs]
     data = {
-        # 'isUser': False,
+        'isUser': False,
         'response': tweets_list
     }
     return JsonResponse(data)
 
-def home_page(request, *args, **kwargs):
+
+def tweet_details(request, tweet_id, *args, **kwargs):
+    """def home_page(request, *args, **kwargs):
     return render(request, 'pages/home.html', context={}, status=200)
     
-def tweet_details(request, tweet_id, *args, **kwargs):
-    """
     REST API VIEW
     Consume by js
     return json data
