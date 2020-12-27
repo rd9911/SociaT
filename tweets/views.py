@@ -19,6 +19,14 @@ def tweet_list_view(request, *args, **kwargs):
     }
     return JsonResponse(data)
 
+def tweet_create_view(request, *args, **kwargs):
+    form = TweetForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        # DO OTHER VALIDATION LOGICS
+        obj.save()
+        form = TweetForm()
+    return render(request, 'components/form.html', context={'form': form})
 
 def tweet_details(request, tweet_id, *args, **kwargs):
     """def home_page(request, *args, **kwargs):
