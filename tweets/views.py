@@ -4,11 +4,21 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 
 from tweets.models import Tweet
+from .forms import TweetForm
 # Create your views here.
 
 def home_page(request, *args, **kwargs):
     return render(request, 'pages/home.html', context={}, status=200)
     
+def tweet_create_view(request, *args, **kwargs):
+    form = TweetForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        # DO OTHER VALIDATION LOGICS
+        obj.save()
+        form = TweetForm()
+    return render(request, 'components/form.html', context={'form': form})
+
 
 def tweet_list_view(request, *args, **kwargs):
     qs = Tweet.objects.all()
