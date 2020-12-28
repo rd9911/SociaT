@@ -13,7 +13,7 @@
         <form class = 'form' id="tweet-create-form" method="POST" action="/create-tweet/">
             {% csrf_token %}
             <input type='hidden' value='/' name="next" />
-            <textarea class='form-control' name='content' placeholder="Take a shot"></textarea>
+            <textarea required='required' class='form-control' name='content' placeholder="Take a shot"></textarea>
             <button type="submit" class='btn btn-primary'>Tweet</button>
         </form>
     </div>
@@ -36,19 +36,35 @@
         const method = myForm.getAttribute('method')
         const xhr = new XMLHttpRequest()
         xhr.open(method, url)
+        const responseType = 'json'
+        xhr.responseType = responseType
         xhr.setRequestHeader('HTTP_X_REQUESTED_WITH', 'XMLHttpRequest')
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
         xhr.onload = function() {
-            const serverResponse = xhr.response
-            console.log(xhr.status, serverResponse)
-            const tweetsElement = document.getElementById('tweets')
-            loadTweets(tweetsElement)
+            if (xhr.status===201) {
+                const new_tweet_json = xhr.response
+                // const newTweetJson = JSON.parse(new_tweet)
+                const newTweetElement = formatTweets(new_tweet_json)
+                const ogHtml = tweetsContainerElement.innerHTML
+                tweetsContainerElement.innerHTML = newTweetElement + ogHtml
+                myForm.reset()
+            } else if (xhr.status=== 400) {
+                const errorJSON = xhr.response
+                console.log(errorJSON)
+            } else if (xhr.status === 500) {
+                alert("Oops! There was a server error. Please, try again!")
+            }
+                
+        }
+        xhr.onerror = function() {
+            alert('Oops! Some error is occured. Maybe you will try later?')
         }
         xhr.send(myFormData)
     }
     const newTweetFormElement = document.getElementById('tweet-create-form')
     newTweetFormElement.addEventListener('submit', handleTweetFormSubmit)
-    const tweetsElement = document.getElementById('tweets') // in jquery: $("#tweets")
+
+    const tweetsContainerElement = document.getElementById('tweets') // in jquery: $("#tweets")
 
     function loadTweets(tweets_element) {
         const xhr = new XMLHttpRequest()
@@ -75,7 +91,7 @@
         
     }
     
-    loadTweets(tweetsElement)
+    loadTweets(tweetsContainerElement)
     
     function trackLike (tweet_id, currentCount) {
         console.log(tweet_id, currentCount)

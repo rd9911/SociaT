@@ -5,6 +5,7 @@
     -> Delete
     -> Retweeting
     -> Liking
+    -> Commenting
 
 2. Users 
     -> Registradion
