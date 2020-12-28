@@ -15,7 +15,6 @@ def home_page(request, *args, **kwargs):
     return render(request, 'pages/home.html', context={}, status=200)
     
 def tweet_create_view(request, *args, **kwargs):
-    print(abc)
     form = TweetForm(request.POST or None)
     next_url = request.POST.get('next') or None
     if form.is_valid():
