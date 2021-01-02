@@ -18,7 +18,7 @@ from django.urls import path
 
 from tweets.views import (
     home_page,
-    tweet_details,
+    tweet_details_view,
     tweet_list_view,
     tweet_create_view,
 )
@@ -26,7 +26,7 @@ from tweets.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_page),
-    path('tweet/<int:tweet_id>', tweet_details),
+    path('tweet/<int:tweet_id>', tweet_details_view),
     path('tweets/', tweet_list_view),
     path('create-tweet/', tweet_create_view),
 ]

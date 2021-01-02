@@ -4,17 +4,47 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
 from django.utils.http import is_safe_url
 from django.conf import settings
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from tweets.models import Tweet
 from .forms import TweetForm
+from .serializers import TweetSerializer
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 # Create your views here.
 
 def home_page(request, *args, **kwargs):
     return render(request, 'pages/home.html', context={}, status=200)
-    
+
+# REST framework view
+@api_view(['POST'])
 def tweet_create_view(request, *args, **kwargs):
+    serializer = TweetSerializer(data = request.POST)
+    if serializer.is_valid(raise_exception=True):
+        obj = serializer.save(user=request.user)
+        return Response(serializer.data, status=201)
+    return Response({}, status=400)
+
+@api_view(['GET'])
+def tweet_list_view(request, *args, **kwargs):
+    qs = Tweet.objects.all()
+    serializer = TweetSerializer(qs, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def tweet_details_view(request, tweet_id, *args, **kwargs):
+    obj = Tweet.objects.filter(id=tweet_id)
+    if not obj.exists():
+        return Response({}, status=404)
+    serializer = TweetSerializer(obj)
+    return Response(serializer.data)
+
+
+def tweet_create_view_pure_django(request, *args, **kwargs):
+    """
+    REST API Create View -> DRF
+    """
     user = request.user
     if not request.user.is_authenticated:
         user = None
@@ -39,7 +69,7 @@ def tweet_create_view(request, *args, **kwargs):
     return render(request, 'components/form.html', context={'form': form})
 
 
-def tweet_list_view(request, *args, **kwargs):
+def tweet_list_view_pure_django(request, *args, **kwargs):
     qs = Tweet.objects.all()
     tweets_list = [x.serialize() for x in qs]
     data = {
@@ -49,7 +79,7 @@ def tweet_list_view(request, *args, **kwargs):
     return JsonResponse(data)
 
 
-def tweet_details(request, tweet_id, *args, **kwargs):
+def tweet_details_pure_django(request, tweet_id, *args, **kwargs):
     """def home_page(request, *args, **kwargs):
     return render(request, 'pages/home.html', context={}, status=200)
     
