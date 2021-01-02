@@ -80,7 +80,7 @@
 
             } else if (xhr.status === 500) {
                 alert("Oops! There was a server error. Please, try again!")
-            } else if (xhr.status === 401) {
+            } else if (xhr.status === 403) {
                 alert("You must first login in order to do this action.")
                 window.location.href = '/login'
             }
