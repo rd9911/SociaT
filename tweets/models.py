@@ -13,7 +13,7 @@ class TweetLike(models.Model):
 
 
 class Tweet(models.Model):
-    # parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, on_delete=models.CASCADE) # to add feature that will inform retweets that tweet was deleted: null=True, SET_NULL
     likes = models.ManyToManyField(User, related_name='tweet_user', blank=True, through=TweetLike)
     content = models.TextField(blank=True, null=True)

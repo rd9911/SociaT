@@ -137,13 +137,13 @@
     
     loadTweets(tweetsContainerElement)
     
-    function tweetActionBtn(tweet_id, currentCount) {
+    function tweetActionBtn(tweet_id, currentCount, action) {
         console.log(tweet_id, currentCount)
         const url = 'api/tweet/action'
         const method = 'POST'
         const data = JSON.stringify({
             id: tweet_id,
-            action: 'like'
+            action: action
         })
         const xhr = new XMLHttpRequest()
         const csrftoken = getCookie('csrftoken');
@@ -155,7 +155,6 @@
         xhr.onload = function() {
             loadTweets(tweetsContainerElement)
         }
-        console.log(xhr)
         xhr.send(data)
         return
     }
