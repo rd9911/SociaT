@@ -1,9 +1,9 @@
 from django import forms
 from django.conf import settings
-
 from .models import Tweet
 
 MAX_TWEET_CHAR = settings.MAX_TWEET_CHAR
+
 
 class TweetForm(forms.ModelForm):
 
