@@ -8,6 +8,7 @@ django = "==2.2"
 djangorestframework = "*"
 pyyaml = "*"
 uritemplate = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pylint = "*"

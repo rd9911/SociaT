@@ -25,7 +25,7 @@ SECRET_KEY = 'n--*chs-2t(9h$n38b&-0xz#&^bt=+k6!w_2bd*af-%igfnmgq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 LOGIN_URL = '/login'
 
 MAX_TWEET_CHAR = 240
@@ -34,20 +34,29 @@ TWEET_ACTION_OPTIONS = ['like', 'unlike', 'retweet']
 # Application definition
 
 INSTALLED_APPS = [
+    # third party
+    'rest_framework',
+    'corsheaders',
+
+    # internal
+    'tweets',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # internal
-    'tweets',
+    
 
-    # third party
-    'rest_framework',
+    
 ]
 
 MIDDLEWARE = [
+    # third party middlewares
+    'corsheaders.middleware.CorsMiddleware',
+    
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    
 ]
 
 ROOT_URLCONF = 'SociaT.urls'
@@ -132,6 +143,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+CORS_ALLOW_ALL_ORIGINS = True # any website has an access to my api
+CORS_URLS_REGEX = r'^/api/.*$'
 
 DEFAULT_RENDERER_CLASSES = [
         'rest_framework.renderers.JSONRenderer',
