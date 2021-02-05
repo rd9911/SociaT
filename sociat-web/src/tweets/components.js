@@ -2,6 +2,30 @@ import React, {useState, useEffect} from 'react';
 
 import {loadTweets} from '../lookup'
 
+
+export function TweetComponent(props) {
+   const textAreaRef = React.createRef()
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const newValue = textAreaRef.current.value
+    console.log(newValue)
+    textAreaRef.current.value = ''
+  }
+  return <div className={props.className}>
+            <div className='col-12 mb-3'>
+              <form onSubmit={handleSubmit}>
+                  <textarea ref={textAreaRef} required={true}className='form-control' name='tweet'>
+                  </textarea>
+                  <button tyoe='submit' className='btn btn-primary my-3'>Post</button>
+
+              </form>
+            </div>
+          <TweetList /> 
+          </div>
+}
+
+
 export function TweetList(props) {
     const [tweets, setTweets] = useState([])
   
@@ -46,17 +70,17 @@ export function ActionBtn(props) {
 
   
 export function Tweet(props) {
-const {tweet} = props
-const className = props.className ? props.className : 'col-10 mx-auto col-md-6'
-return <div className={className}>
-    <p>
-    {tweet.id} - {tweet.content}
-    </p>
-    <div className='btn btn-group'>
-    <ActionBtn tweet={tweet} action={{type: 'like', display:'Likes'}}/>
-    <ActionBtn tweet={tweet} action={{type: 'unlike', display: 'Unlikes'}}/>
-    <ActionBtn tweet={tweet} action={{type: 'retweet', display: 'Retweet'}}/>
-    </div>
-</div>
+  const {tweet} = props
+  const className = props.className ? props.className : 'col-10 mx-auto col-md-6'
+  return <div className={className}>
+      <p>
+      {tweet.id} - {tweet.content}
+      </p>
+      <div className='btn btn-group'>
+      <ActionBtn tweet={tweet} action={{type: 'like', display:'Likes'}}/>
+      <ActionBtn tweet={tweet} action={{type: 'unlike', display: 'Unlikes'}}/>
+      <ActionBtn tweet={tweet} action={{type: 'retweet', display: 'Retweet'}}/>
+      </div>
+  </div>
 }
   
