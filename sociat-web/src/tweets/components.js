@@ -4,12 +4,24 @@ import {loadTweets} from '../lookup'
 
 
 export function TweetComponent(props) {
-   const textAreaRef = React.createRef()
-
+  const textAreaRef = React.createRef()
+  const [newTweets, setNewTweets] = useState([])
   const handleSubmit = (event) => {
     event.preventDefault()
     const newValue = textAreaRef.current.value
     console.log(newValue)
+
+
+    // Look at the "future-upgrades" Num1 syntax to make it easier to write
+    let tempNewTWeets = [...newTweets]
+    tempNewTWeets.unshift({
+      content: newValue,
+      likes: 0,
+      id: Math.floor(Math.random() * (500 - 1) + 1)
+    })
+    setNewTweets(tempNewTWeets)
+
+
     textAreaRef.current.value = ''
   }
   return <div className={props.className}>
@@ -21,24 +33,32 @@ export function TweetComponent(props) {
 
               </form>
             </div>
-          <TweetList /> 
+          <TweetList newTweets={newTweets} /> 
           </div>
 }
 
 
 export function TweetList(props) {
-    const [tweets, setTweets] = useState([])
-  
+    const [tweetsInit, setTweetsInit] = useState([]);
+    const [tweets, setTweets] = useState([]);
+
+    useEffect(() => {
+      const finalListTweets = [...props.newTweets].concat(tweetsInit)
+      if (finalListTweets.length > tweets.length) {
+        setTweets(finalListTweets);
+      }
+    }, [props.newTweets, tweets, tweetsInit])
+
     useEffect(() => {
       const myCallback = (response, status) => {
         if (status === 200) {
-          setTweets(response)
+          setTweetsInit(response)
         } else {
           alert('There was an error.')
         }
       }
       loadTweets(myCallback)
-    }, [])
+    }, [tweetsInit])
     
     return tweets.map((item, index) => {
       return <Tweet tweet={item} className='my-5 py-5 border bg-white text-dark' key={`${index} - ${item}`}/>

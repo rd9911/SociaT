@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import { TweetComponent } from './tweets';
 import reportWebVitals from './reportWebVitals';
 
+const sociat = document.getElementById('sociat')
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <TweetComponent />
   </React.StrictMode>,
-  document.getElementById('root')
+  sociat
 );
 
 // If you want to start measuring performance in your app, pass a function
