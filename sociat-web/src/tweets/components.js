@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
-import {loadTweets} from '../lookup'
+import {loadTweets, createTweet} from '../lookup'
 
 
 export function TweetComponent(props) {
@@ -14,11 +14,15 @@ export function TweetComponent(props) {
 
     // Look at the "future-upgrades" Num1 syntax to make it easier to write
     let tempNewTWeets = [...newTweets]
-    tempNewTWeets.unshift({
-      content: newValue,
-      likes: 0,
-      id: Math.floor(Math.random() * (500 - 1) + 1)
+    createTweet(newValue, (response, status) => { // SERVER SIDE CALL
+      if (status === 201) {
+        tempNewTWeets.unshift(response)
+      } else {
+        console.log(response)
+        alert('An error occured, please try again!')
+      }
     })
+    
     setNewTweets(tempNewTWeets)
 
 
