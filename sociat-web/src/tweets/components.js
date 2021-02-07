@@ -6,25 +6,25 @@ import {loadTweets, createTweet} from '../lookup'
 export function TweetComponent(props) {
   const textAreaRef = React.createRef()
   const [newTweets, setNewTweets] = useState([])
+
+  const handleBackendUpdate = (response, status) => {
+    // backend api response handler
+    let tempNewTWeets = [...newTweets]
+    if (status === 201) {
+      tempNewTWeets.unshift(response)
+      setNewTweets(tempNewTWeets)
+    } else {
+      console.log(response)
+      alert('An error occured, please try again!')
+    }
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    const newValue = textAreaRef.current.value
-    console.log(newValue)
+    const newValue = textAreaRef.current.valu    
 
-
-    // Look at the "future-upgrades" Num1 syntax to make it easier to write
-    let tempNewTWeets = [...newTweets]
-    createTweet(newValue, (response, status) => { // SERVER SIDE CALL
-      if (status === 201) {
-        tempNewTWeets.unshift(response)
-      } else {
-        console.log(response)
-        alert('An error occured, please try again!')
-      }
-    })
-    
-    setNewTweets(tempNewTWeets)
-
+    // backend api request
+    createTweet(newValue, handleBackendUpdate) // SERVER SIDE CALL
 
     textAreaRef.current.value = ''
   }
